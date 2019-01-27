@@ -1,35 +1,5 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Admin Main Page</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        
-        
-        <!-- Would be nice to have the admin confirm the deletion but this can be removed -->
-        <script>
-            function confirmDelete() {
-                return confirm("Are you sure you want to delete the product?");
-            }
-        </script>
-        
-    </head>
-    <body>
-    
-    <!--Keeping things centered, this can also be removed for better styling effects -->
-    <div class='container'>
-        <div class='text-center'>
             
-            <!-- Bootstrap Navagation Bar -->
-            <nav class='navbar navbar-default - navbar-fixed-top'>
-                <div class='container-fluid'>
-                    <div class='navbar-header'>
-                        <a class='navbar-brand' href='#'>Sports Engine</a>
-                    </div>
-                </div>
-            </nav>
-            <br /> <br /> <br />
-            
-        <h1>Admin Main Page</h1>
+        <h2>Admin Main Page</h2>
         
         <!-- Need to script in the admin's name who logs in, this would be a cgi admin.py script I believe -->
         <h3>Welcome INSERT ADMIN NAME!</h3><br /><br />
@@ -50,17 +20,3 @@
         <form>
             <input type="submit" class='btn btn-secondary' id="beginning" value="Logout"/>
         </form>
-        
-        <!-- This is the footer -->
-        <footer>
-            <hr>
-            CST 363 Databases. 2019&copy; Nikulyak. Doan. Sikes. <br />
-            <strong>Disclaimer:</strong> The information in this webpage is fictitous. <br />
-            It is used for academic purposes only.
-            <figure id="csumbLogo">
-                <img src="../img/csumbLogo.jpg" alt="Logo for CSUMB" width="50"/>
-            </figure>
-        </footer>
-        <!-- closing footer -->
-    </body>
-</html>
