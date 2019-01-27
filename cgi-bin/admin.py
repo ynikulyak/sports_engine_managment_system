@@ -1,7 +1,7 @@
 #!/usr/bin/env python3 
 
 # This file must be in the /cgi-bin/ directory of the server.
-import cgitb , cgi, re, sportslib
+import cgitb , cgi, sportslib
 cgitb.enable()
 arguments = cgi.FieldStorage()
 
@@ -10,8 +10,8 @@ header_filename = "_header.html"
 footer_filename = "_footer.html"
 
 # Determine the action and body file to open from the index directory
-action = re.sub(r'\W+', '', arguments.getvalue("action", "login"))
-action_filename = "./admin/" + action + ".html"
+action = arguments.getvalue("action", "login")
+action_filename = "./admin/" + sportslib.sanitize_file_name(action) + ".html"
 
 # Send HTML and UTF-8 headers.
 print("Content-Type: text/html; charset=utf-8")
