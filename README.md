@@ -11,7 +11,7 @@ python httpserver.py
 ```
 
 After running this command you will see `server started 8000` in your command line/terminal which means that application is running and processing HTTP traffic on port **8000**.
-You can then open a browser and load main page of the application with the following link: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+You can open a browser then and load the main page of the application with the following link: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ## Dynamic HTML rendering
 Application uses Python basic HTTP server and its ability to execute Python scripts stored in **cgi-bin** directory. 
@@ -20,11 +20,11 @@ In order to be able to render HTML pages dynamically, application uses Python sc
 
 Since HTML header and footer are the same for each application page, it makes sense to move them into their own files: **_header.html** and **_footer.html**.
 
-Scripts **index.py** and **admin.py** act as main point in [Front Controller Pattern](https://en.wikipedia.org/wiki/Front_controller) and process all HTTP requests to the web application.
+Scripts **index.py** and **admin.py** act as main code point in [Front Controller Pattern](https://en.wikipedia.org/wiki/Front_controller) and process all HTTP requests in the web application.
 
-HTTP parameter **action** sets web application page name and this page rendered to browser.
+HTTP parameter **action** sets the desired web application page name for rendering.
 
-When the user opens web application with default HTTP URL [http://127.0.0.1:8000](http://127.0.0.1:8000), the Python's web server loads static HTML file **index.html** which contains a redirect to web application's Front Controller in **index.py**.
+When the user opens web application with default HTTP URL [http://127.0.0.1:8000](http://127.0.0.1:8000), the Python's web server loads static HTML file **index.html** which contains HTML redirect to web application's Front Controller in **/cgi-bin/index.py** to application's Home page.
 
 Below you may find the list of links that web application processes.
 
