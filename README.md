@@ -54,7 +54,7 @@ Below you may find the list of links that web application processes.
 * [http://127.0.0.1:8000/cgi-bin/index.py](http://127.0.0.1:8000/cgi-bin/index.py) - Home page
 * [http://127.0.0.1:8000/cgi-bin/index.py?**action=home**](http://127.0.0.1:8000/cgi-bin/index.py?action=home) - Home page
 * [http://127.0.0.1:8000/cgi-bin/index.py?**action=about**](http://127.0.0.1:8000/cgi-bin/index.py?action=about) - About page
-* [http://127.0.0.1:8000/cgi-bin/index.py?**action=login**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_login) - Login page
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_login**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_login) - Login page
 * [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_logout**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_logout) - Logout action (redirects to login)
 * [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_sports**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_sports) - List of Sports
 * [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_sport_edit**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_sport_edit) - Add new Sports
