@@ -42,7 +42,7 @@ For example, this is the code of logout action in **action_admin_logout.py** whe
         }
 ```
 
-
+## Index action (root)
 When the user opens web application with default HTTP URL [http://127.0.0.1:8000](http://127.0.0.1:8000), the Python's web server loads static HTML file **index.html** which contains HTML redirect to web application's Front Controller in **/cgi-bin/index.py** to application's Home page.
 
 Below you may find the list of links that web application processes.
