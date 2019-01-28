@@ -1,7 +1,9 @@
 #!/usr/bin/env python3 
 
 # This file must be in the /cgi-bin/ directory of the server.
-import cgitb , cgi, sportslib
+import cgitb, cgi, sports, sportslib
+
+# Enable CGI errors and extract arguments
 cgitb.enable()
 arguments = cgi.FieldStorage()
 
@@ -10,18 +12,38 @@ header_filename = "_header.html"
 footer_filename = "_footer.html"
 
 # Determine the action and body file to open from the index directory
-action = arguments.getvalue("action", "home")
-action_filename = sportslib.sanitize_file_name(action) + ".html"
+action = sportslib.sanitize_file_name(arguments.getvalue("action", "home"))
+action_file = action + ".html"
+# Admin action templates are withoud "admin_" prefix in admin directory.
+action_file = action_file.replace("admin_", "admin/")
+
+# Read cookies
+cookies = sportslib.get_cookies()
+
+# Start main web applicatiom action to get dynamic contents for body
+app = sports.Application(action, arguments, cookies)
+application_result = app.start()
+
+# Test if there cookies to set (must set it before content type header).
+if ("cookies" in application_result.keys()):
+    sportslib.set_cookies(application_result['cookies'])
 
 # Send HTML and UTF-8 headers.
 print("Content-Type: text/html; charset=utf-8")
 print()
 
-# Send HTML header 
-print(sportslib.file_get_contents('./' + header_filename))
+if ("location" in application_result.keys()):
+	# Process redirect
+	print(sportslib.redirect(application_result['location']))
+else:
+	# Send HTML header 
+	header_template = sportslib.file_get_contents('./' + header_filename)
+	print(sportslib.build_template(header_template, application_result))
 
-# Send HTML body
-print(sportslib.file_get_contents('./' + action_filename))
+	# Send HTML body
+	body_file_template = sportslib.file_get_contents('./' + action_file)
+	print(sportslib.build_template(body_file_template, application_result))
 
-# Send HTML footer
-print(sportslib.file_get_contents('./' + footer_filename))
+	# Send HTML footer
+	footer_template = sportslib.file_get_contents('./' + footer_filename)
+	print(sportslib.build_template(footer_template, application_result))

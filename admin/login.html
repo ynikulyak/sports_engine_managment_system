@@ -1,9 +1,10 @@
         <h2>Sport Engine - Admin Site</h2>
-        
-        <form method="post" action="loginProcess.php">
+
+        <!-- /cgi-bin/test_post.py -->
+        <p style="color:red;">[#error#]</p>
+        <form method="post" action="[#BASE_PATH#]action=admin_login">
             Username: <input type="text" name="username" />  <br /><br />
             Password: <input type="password" name="password" /> <br /><br />
-            
-            <input type="submit" name="submitForm" value="Login!" />
-            
+            <input type="submit" name="submit" value="Login!" />
+            <input type="hidden" name="login_key" value="[#random_id#]">
         </form>

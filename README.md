@@ -15,14 +15,30 @@ You can open a browser then and load the main page of the application with the f
 
 ## Dynamic HTML rendering
 Application uses Python basic HTTP server and its ability to execute Python scripts stored in **cgi-bin** directory. 
-In order to be able to render HTML pages dynamically, application uses Python scripts **index.py** (user visible application part) and
-**admin.py** (administration application part) to dynamically render HTML header, HTML body and HTML footer of the application.
+In order to be able to render HTML pages dynamically, application uses Python scripts **index.py** to dynamically render HTML header, HTML body and HTML footer of the application.
 
 Since HTML header and footer are the same for each application page, it makes sense to move them into their own files: **_header.html** and **_footer.html**.
 
-Scripts **index.py** and **admin.py** act as main code point in [Front Controller Pattern](https://en.wikipedia.org/wiki/Front_controller) and process all HTTP requests in the web application.
+Scripts **index.py** act as main code point in [Front Controller Pattern](https://en.wikipedia.org/wiki/Front_controller) and process all HTTP requests in the web application.
 
 HTTP parameter **action** sets the desired web application page name for rendering.
+
+## Actions
+**index.py** holds a dictionary of all supported **Web Actions** (i.e. controllers) inside **sports.py** in **Application** class. 
+
+Each action class is defined in its own file and loaded as a module. Action must have **execute** method and return a dictionary of parameters to be rendered in action's HTML template.
+
+For example, this is the code of logout action in **action_admin_logout.py** where returned dictionary contains a set of cookies to set (here we have authentication cookie **auth** reset, see more info below) and redirection URL in **location** value to Login page (**admin_login** action):
+```Python
+    def execute(self, database_connection, arguments, cookies):
+        return {
+          'cookies': {
+             'auth': '_',
+          },
+          'location': sportslib.Link('admin_login').url()
+        }
+```
+
 
 When the user opens web application with default HTTP URL [http://127.0.0.1:8000](http://127.0.0.1:8000), the Python's web server loads static HTML file **index.html** which contains HTML redirect to web application's Front Controller in **/cgi-bin/index.py** to application's Home page.
 
@@ -30,21 +46,23 @@ Below you may find the list of links that web application processes.
 
 ## List of URLs in the web application
 
-### Regular links (note action parameter is in bold):
+### Links (note action parameter is in bold):
 
 * [http://127.0.0.1:8000/cgi-bin/index.py](http://127.0.0.1:8000/cgi-bin/index.py) - Home page
 * [http://127.0.0.1:8000/cgi-bin/index.py?**action=home**](http://127.0.0.1:8000/cgi-bin/index.py?action=home) - Home page
 * [http://127.0.0.1:8000/cgi-bin/index.py?**action=about**](http://127.0.0.1:8000/cgi-bin/index.py?action=about) - About page
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=login**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_login) - Login page
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_logout**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_logout) - Logout action (redirects to login)
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_sports**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_sports) - List of Sports
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_sport_edit**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_sport_edit) - Add new Sports
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_sport_edit&id=1**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_sport_edit&&id=1) - Edit Sport 1
 
-### Admin links (note action parameter is in bold):
+**Note:** all actions that have predix **admin_** take their templates from **admin/** folder.
 
-* [http://127.0.0.1:8000/cgi-bin/admin.py](http://127.0.0.1:8000/cgi-bin/admin.py) - Login page
-* [http://127.0.0.1:8000/cgi-bin/admin.py?**action=login**](http://127.0.0.1:8000/cgi-bin/admin.py?action=login) - Login page
+### Authentication
 
+In case of successful login on **Login Page** Sports application stores authenticatiton data in cookie named **auth**. Cookie contains currently signed **admin_id** and a secret signature for verification.
 
+For example:
+`5370f7ce8ab20b69e5b3ddadf5cbe1df15e76a26--10000`
 
-### TODO:
-* add dynamic variables to web engine
-* add actions for different web pages
-* add HTML redirect helper function
-* add SQL functions and database configuration
