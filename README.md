@@ -3,6 +3,9 @@
 ## Class information
 CST363: Database Systems - Project 1.1  at CSUMB: Web app using CGI scripts, MySQL, HTML, CSS
 
+## Application configuration
+Application configuration is stored in **appconfig.py** file. Set desired MySQL connection configuration there (database_* parameters). 
+
 ## Starting the web server
 Make sure you use Python of version 3.
 ```shell
