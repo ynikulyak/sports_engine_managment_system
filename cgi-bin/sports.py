@@ -18,9 +18,12 @@ class Application:
             # User actions
             'home': controllers.Home(),
             'about': controllers.About(),
-            # Admin
+            # Admin - authenticaiton
             'admin_login': controllers.AdminLogin(),
             'admin_logout': controllers.AdminLogout(),
+            # Admin - database controllers
+            'admin_divisions': controllers.AdminDivisions(),
+            'admin_division_edit': controllers.AdminDivisionEdit(),
             'admin_sports': controllers.AdminSports(),
             'admin_sport_edit': controllers.AdminSportEdit(),
             'admin_players': controllers.AdminPlayers(),

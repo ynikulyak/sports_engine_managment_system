@@ -69,6 +69,34 @@ class HTMLTable:
         return result + "</table>"
 
 
+class HTMLSelect:
+    default_css_classes = 'form-control'
+
+    def __init__(self, select_name, field_name):
+        self.select_name = select_name
+        self.field_name = field_name
+        self.selected = str(-1)
+        self.options = []
+
+    def add_option(self, id, title):
+        self.options.append((str(id), str(title)))
+
+    def set_selected(self, id):
+        self.selected = str(id)
+
+    def __str__(self):
+        result = '<select class="' + self.default_css_classes + '" id="' + self.field_name + '" name="' + self.field_name + '">'
+        result += '<option value="">-- choose ' + self.select_name + '-- </option>'
+        index = 1
+        for option in self.options:
+            result += '<option class="option_' + str(index) + '" '
+            if option[0] == self.selected:
+                result += ' selected '    
+            result += 'value="' + encode_html_entities(option[0]) + '">'
+            result += encode_html_entities(option[1]) + '</option>'
+            index += 1
+        return result + "</select>"
+
 # Body template dynamic contents
 base_path_placeholder = '[#BASE_PATH#]'
 log_out_button_placeholder = '[#LOG_OUT_BUTTON#]'

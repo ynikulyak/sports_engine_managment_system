@@ -1,0 +1,16 @@
+<h2>[#action_title#] division [#id#]</h2>
+
+<div class="has-error">[#error#]</div>
+<form role="form" method="post" action="[#BASE_PATH#]action=admin_division_edit&id=[#id#]">
+  <div class="form-group">
+    <label for="division_name">Division Name</label>
+    <input type="text" class="form-control" id="division_name" name="division_name" placeholder="Enter name" value="[#division_name#]">
+  </div>
+  <div class="form-group">
+    <label for="sports">Sport</label>
+    [#SELECT_OF_SPORTS#]
+  </div>
+  <input type="hidden" name="submit" value="save">
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+

@@ -5,7 +5,7 @@ import sportslib, hashlib, uuid
 class About:
 
     """
-    About action
+    About controller
 
     Parameters:
     database_connection (mysql.connector.connection) - MySQL database connection
@@ -19,7 +19,7 @@ class About:
 class Home:
 
     """
-    Home action
+    Home contoller
 
     Parameters:
     database_connection (mysql.connector.connection) - MySQL database connection
@@ -33,6 +33,107 @@ class Home:
 import sportslib
 
 # Admin related controllers
+
+class AdminDivisions:
+
+    sql = "SELECT d.division_id, d.division_name, s.sport_name FROM division d LEFT JOIN sports s ON d.sport_id = s.sport_id ORDER BY d.division_id"
+
+    """
+    Admin divisions controller
+
+    Parameters:
+    database_connection (mysql.connector.connection) - MySQL database connection
+    arguments (cgi.arguments - HTML form fields and GET arguments
+    cookies (dict) - cookies as a dictionary
+    Returns:
+    dictionary (dict) of contents variable to render
+    """
+    def execute(self, database_connection, arguments, cookies):
+        cursor = database_connection.cursor()
+        cursor.execute(self.sql)
+        table = sportslib.HTMLTable("ID", "Name", "Sport", "Edit", "Delete")
+        row = cursor.fetchone()
+        while row is not None:
+            link = sportslib.Link("admin_division_edit", row[0], str(row[0]))
+            edit_link = sportslib.Link("admin_division_edit", row[0], "edit")
+            table.add_row(link, row[1], row[2], edit_link, 'X')
+            row = cursor.fetchone()
+        return {'TABLE_OF_DIVISIONS': table}
+
+
+class AdminDivisionEdit:
+
+    select_sql = "SELECT * FROM division WHERE division_id = %s LIMIT 1"
+    insert_sql = "INSERT INTO division (division_name, sport_id) VALUES (%s, %s)"
+    update_sql = "UPDATE division SET division_name = %s, sport_id = %s WHERE division_id = %s LIMIT 1"
+
+    list_of_sports_sql = "SELECT sport_id, sport_name FROM sports ORDER BY sport_name"
+
+
+    """
+    Admin add/edit division controller
+
+    Parameters:
+    database_connection (mysql.connector.connection) - MySQL database connection
+    arguments (cgi.arguments - HTML form fields and GET arguments
+    cookies (dict) - cookies as a dictionary
+    """
+    def execute(self, database_connection, arguments, cookies):
+        select_of_sports = self.build_select_of_sports(database_connection)
+        division_id = arguments.getvalue("id", "")
+        data = {
+            'id': division_id, 
+            'division_name': arguments.getvalue("division_name", "").strip(),
+            'sport_id': arguments.getvalue("sport_id", "").strip(),
+            'action_title': 'Add',
+            'error': '',
+            'SELECT_OF_SPORTS': select_of_sports
+        }
+        if "save" == arguments.getvalue("submit", ""):
+            return self.save(database_connection, arguments, cookies, data)
+        row = None
+        if division_id:
+            cursor = database_connection.cursor()
+            cursor.execute(self.select_sql, (division_id,))
+            row = cursor.fetchone()
+            if not row:
+                data['error'] = 'Division ' + division_id + ' not found.'
+                data['id'] = ''
+                return data
+            data['id'] = row[0]
+            data['division_name'] = row[1]
+            data['sport_id'] = row[2] 
+            data['action_title'] = 'Edit'
+            select_of_sports.set_selected(data['sport_id'])
+        return data
+
+    def save(self, database_connection, arguments, cookies, data):
+        if data['division_name'] == '' or data['sport_id'] == '':
+            data['error'] = 'All fields are required'
+            return data
+        cursor = database_connection.cursor()
+        if data['id'] == '':
+            cursor.execute(self.insert_sql, (data['division_name'], data['sport_id']))
+        else:
+            cursor.execute(self.update_sql, (data['division_name'], data['sport_id'], data['id']))
+        database_connection.commit()
+        data['location'] = sportslib.Link('admin_divisions').url()
+        return data
+
+    def build_select_of_sports(self, database_connection):
+        cursor = database_connection.cursor()
+        cursor.execute(self.list_of_sports_sql)
+        select = sportslib.HTMLSelect('sports', 'sport_id')
+        row = cursor.fetchone()
+        while row is not None:
+            select_id = str(row[0])
+            select_title = row[1]
+            select.add_option(select_id, select_title)
+            row = cursor.fetchone()
+        return select
+
+
+
 
 class AdminSports:
 
@@ -59,9 +160,7 @@ class AdminSports:
             edit_link = sportslib.Link("admin_sport_edit", row[0], "edit")
             table.add_row(link, row[1], row[2], edit_link, 'X')
             row = cursor.fetchone()
-
         return {'TABLE_OF_SPORTS': table}
-
 
 class AdminSportEdit:
 
@@ -96,6 +195,7 @@ class AdminSportEdit:
             row = cursor.fetchone()
             if not row:
                 data['error'] = 'Sport ' + sport_id + ' not found.'
+                data['id'] = ''
                 return data
             data['id'] = row[0]
             data['title'] = row[1]
@@ -117,12 +217,15 @@ class AdminSportEdit:
         return data
 
 
+
+
+
 class AdminPlayers:
 
     sql = "SELECT * FROM player ORDER BY player_id"
 
     """
-    Admin sports action
+    Admin players controller
 
     Parameters:
     database_connection (mysql.connector.connection) - MySQL database connection
@@ -134,7 +237,6 @@ class AdminPlayers:
     def execute(self, database_connection, arguments, cookies):
         cursor = database_connection.cursor()
         cursor.execute(self.sql)
-
         table = sportslib.HTMLTable("ID", "First Name", "Last Name", "Position", "Edit", "Delete")
         row = cursor.fetchone()
         while row is not None:
@@ -154,7 +256,7 @@ class AdminPlayerEdit:
 
 
     """
-    Admin add/edit sport action
+    Admin add/edit player controller
 
     Parameters:
     database_connection (mysql.connector.connection) - MySQL database connection
@@ -180,6 +282,7 @@ class AdminPlayerEdit:
             row = cursor.fetchone()
             if not row:
                 data['error'] = 'Player ' + player_id + ' not found.'
+                data['id'] = ''
                 return data
             data['id'] = row[0]
             data['first_name'] = row[1]
@@ -202,12 +305,16 @@ class AdminPlayerEdit:
         return data
 
 
+
+
+
+
 class AdminLogin:
 
     sql = "SELECT admin_id FROM admin WHERE admin_user_name = %s and admin_password = %s"
 
     """
-    Admin login action
+    Admin login controller
 
     Parameters:
     database_connection (mysql.connector.connection) - MySQL database connection
@@ -242,7 +349,7 @@ class AdminLogin:
 class AdminLogout:
 
     """
-    Admin logout action
+    Admin logout controller
 
     Parameters:
     database_connection (mysql.connector.connection) - MySQL database connection
