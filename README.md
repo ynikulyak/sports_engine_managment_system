@@ -75,7 +75,7 @@ Below you may find the list of links that web application processes.
 
 ### Authentication
 
-In case of successful login on **Login Page** Sports application stores authenticatiton data in cookie named **auth**. Cookie contains currently signed **admin_id** and a secret signature for verification.
+In case of successful login on **Login Page** Sports application stores authenticatiton data in cookie named **auth**. Cookie contains currently logged-in **admin_id** and a secret signature for the verification.
 
 For example:
 `5370f7ce8ab20b69e5b3ddadf5cbe1df15e76a26--10000`

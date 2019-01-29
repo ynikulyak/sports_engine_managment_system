@@ -27,7 +27,7 @@ class Home:
     cookies (dict) - cookies as a dictionary
     """
     def execute(self, database_connection, arguments, cookies):
-    	# TODO: read database here
+        # TODO: read database here
         return {}
 
 import sportslib
@@ -45,8 +45,8 @@ class AdminSports:
     database_connection (mysql.connector.connection) - MySQL database connection
     arguments (cgi.arguments - HTML form fields and GET arguments
     cookies (dict) - cookies as a dictionary
-	Returns:
-	dictionary (dict) of contents variable to render
+    Returns:
+    dictionary (dict) of contents variable to render
     """
     def execute(self, database_connection, arguments, cookies):
         cursor = database_connection.cursor()
@@ -57,19 +57,21 @@ class AdminSports:
         while row is not None:
             link = sportslib.Link("admin_sport_edit", row[0], str(row[0]))
             edit_link = sportslib.Link("admin_sport_edit", row[0], "edit")
-            delete_link = sportslib.Link("admin_sport_delete", row[0], "X")
-            table.add_row(link, row[1], row[2], edit_link, delete_link)
+            table.add_row(link, row[1], row[2], edit_link, 'X')
             row = cursor.fetchone()
 
         return {
-        	'TABLE_OF_SPORTS': table,
-        	'logged_in_user_id': sportslib.get_logged_in_user_id()
+            'TABLE_OF_SPORTS': table,
+            'logged_in_user_id': sportslib.get_logged_in_user_id()
         }
 
 
 class AdminSportEdit:
 
-    sql = "SELECT * FROM sports WHERE sport_id = %s LIMIT 1"
+    select_sql = "SELECT * FROM sports WHERE sport_id = %s LIMIT 1"
+    insert_sql = "INSERT INTO sports (sport_name, sport_description) VALUES (%s, %s)"
+    update_sql = "UPDATE sports SET sport_name = %s, sport_description = %s WHERE sport_id = %s LIMIT 1"
+
 
     """
     Admin add/edit sport action
@@ -83,22 +85,41 @@ class AdminSportEdit:
         sport_id = arguments.getvalue("id", "")
         data = {
             'id': sport_id, 
-            'title': arguments.getvalue("title", ""),
-            'description': arguments.getvalue("description", ""),
-            'action_title': 'Add'
+            'title': arguments.getvalue("title", "").strip(),
+            'description': arguments.getvalue("description", "").strip(),
+            'action_title': 'Add',
+            'error': ''
         }
+        if "save" == arguments.getvalue("submit", ""):
+            return self.save(database_connection, arguments, cookies, data)
         row = None
         if sport_id:
             cursor = database_connection.cursor()
-            cursor.execute(self.sql, (sport_id,))
+            cursor.execute(self.select_sql, (sport_id,))
             row = cursor.fetchone()
             if not row:
+                data['error'] = 'Sport ' + sport_id + ' not found.'
                 return data
             data['id'] = row[0]
             data['title'] = row[1]
             data['description'] = row[2] 
             data['action_title'] = 'Edit'
         return data
+
+    def save(self, database_connection, arguments, cookies, data):
+        if data['title'] == '' or data['description'] == '':
+            data['error'] = 'All fields are required'
+            return data
+        sport_id = arguments.getvalue("id", "")
+        cursor = database_connection.cursor()
+        if data['id'] == '':
+            cursor.execute(self.insert_sql, (data['title'], data['description']))
+        else:
+            cursor.execute(self.update_sql, (data['title'], data['description'], sport_id))
+        database_connection.commit()
+        data['location'] = sportslib.Link('admin_sports').url()
+        return data
+
 
 class AdminLogin:
 
