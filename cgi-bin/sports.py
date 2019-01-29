@@ -22,7 +22,9 @@ class Application:
             'admin_login': controllers.AdminLogin(),
             'admin_logout': controllers.AdminLogout(),
             'admin_sports': controllers.AdminSports(),
-            'admin_sport_edit': controllers.AdminSportEdit()
+            'admin_sport_edit': controllers.AdminSportEdit(),
+            'admin_players': controllers.AdminPlayers(),
+            'admin_player_edit': controllers.AdminPlayerEdit()
         }
         if action not in self.actions.keys():
             raise ValueError('Action ' + action + ' is not implemented.')
@@ -41,17 +43,22 @@ class Application:
       If dictionary contains key "location" then its value treated as HTML redirect.
     """
     def start(self):
-        result = {}
+        result = {'error': ''}
         try:
             self.database_connection = mysql.connector.connect(
                 user=appconfig.database_user,
                 password=appconfig.database_password,
                 database=appconfig.database_name,
                 host=appconfig.database_host)
-            result = self.actionInstance.execute(
-                self.database_connection, 
-                self.arguments, 
-                self.cookies)
+            if not self.database_connection:
+                result['error'] = 'No MySQL connection'
+            else: 
+                result = self.actionInstance.execute(
+                    self.database_connection, 
+                    self.arguments, 
+                    self.cookies)
+                if 'error' not in result.keys():
+                    result['error'] = ''
         except mysql.connector.Error as err:
             result['error'] = str(err)
         finally:

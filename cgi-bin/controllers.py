@@ -60,10 +60,7 @@ class AdminSports:
             table.add_row(link, row[1], row[2], edit_link, 'X')
             row = cursor.fetchone()
 
-        return {
-            'TABLE_OF_SPORTS': table,
-            'logged_in_user_id': sportslib.get_logged_in_user_id()
-        }
+        return {'TABLE_OF_SPORTS': table}
 
 
 class AdminSportEdit:
@@ -110,14 +107,98 @@ class AdminSportEdit:
         if data['title'] == '' or data['description'] == '':
             data['error'] = 'All fields are required'
             return data
-        sport_id = arguments.getvalue("id", "")
         cursor = database_connection.cursor()
         if data['id'] == '':
             cursor.execute(self.insert_sql, (data['title'], data['description']))
         else:
-            cursor.execute(self.update_sql, (data['title'], data['description'], sport_id))
+            cursor.execute(self.update_sql, (data['title'], data['description'], data['id']))
         database_connection.commit()
         data['location'] = sportslib.Link('admin_sports').url()
+        return data
+
+
+class AdminPlayers:
+
+    sql = "SELECT * FROM player ORDER BY player_id"
+
+    """
+    Admin sports action
+
+    Parameters:
+    database_connection (mysql.connector.connection) - MySQL database connection
+    arguments (cgi.arguments - HTML form fields and GET arguments
+    cookies (dict) - cookies as a dictionary
+    Returns:
+    dictionary (dict) of contents variable to render
+    """
+    def execute(self, database_connection, arguments, cookies):
+        cursor = database_connection.cursor()
+        cursor.execute(self.sql)
+
+        table = sportslib.HTMLTable("ID", "First Name", "Last Name", "Position", "Edit", "Delete")
+        row = cursor.fetchone()
+        while row is not None:
+            link = sportslib.Link("admin_player_edit", row[0], str(row[0]))
+            edit_link = sportslib.Link("admin_player_edit", row[0], "edit")
+            table.add_row(link, row[1], row[2], row[3], edit_link, 'X')
+            row = cursor.fetchone()
+
+        return {'TABLE_OF_PLAYERS': table}
+
+
+class AdminPlayerEdit:
+
+    select_sql = "SELECT * FROM player WHERE player_id = %s LIMIT 1"
+    insert_sql = "INSERT INTO player (player_first_name, player_last_name, player_position) VALUES (%s, %s, %s)"
+    update_sql = "UPDATE player SET player_first_name = %s, player_last_name = %s, player_position = %s WHERE player_id = %s LIMIT 1"
+
+
+    """
+    Admin add/edit sport action
+
+    Parameters:
+    database_connection (mysql.connector.connection) - MySQL database connection
+    arguments (cgi.arguments - HTML form fields and GET arguments
+    cookies (dict) - cookies as a dictionary
+    """
+    def execute(self, database_connection, arguments, cookies):
+        player_id = arguments.getvalue("id", "")
+        data = {
+            'id': player_id, 
+            'first_name': arguments.getvalue("first_name", "").strip(),
+            'last_name': arguments.getvalue("last_name", "").strip(),
+            'player_position': arguments.getvalue("player_position", "").strip(),
+            'action_title': 'Add',
+            'error': ''
+        }
+        if "save" == arguments.getvalue("submit", ""):
+            return self.save(database_connection, arguments, cookies, data)
+        row = None
+        if player_id:
+            cursor = database_connection.cursor()
+            cursor.execute(self.select_sql, (player_id,))
+            row = cursor.fetchone()
+            if not row:
+                data['error'] = 'Player ' + player_id + ' not found.'
+                return data
+            data['id'] = row[0]
+            data['first_name'] = row[1]
+            data['last_name'] = row[2] 
+            data['player_position'] = row[3] 
+            data['action_title'] = 'Edit'
+        return data
+
+    def save(self, database_connection, arguments, cookies, data):
+        if data['first_name'] == '' or data['last_name'] == '' or data['player_position'] == '':
+            data['error'] = 'All fields are required'
+            return data
+        cursor = database_connection.cursor()
+        if data['id'] == '':
+            cursor.execute(self.insert_sql, (data['first_name'], data['last_name'], data['player_position']))
+        else:
+            cursor.execute(self.update_sql, (data['first_name'], data['last_name'], data['player_position'], data['id']))
+        database_connection.commit()
+        data['location'] = sportslib.Link('admin_players').url()
         return data
 
 

@@ -1,0 +1,20 @@
+<h2>[#action_title#] player [#id#]</h2>
+
+<div class="has-error">[#error#]</div>
+<form role="form" method="post" action="[#BASE_PATH#]action=admin_player_edit&id=[#id#]">
+  <div class="form-group">
+    <label for="first_name">First Name</label>
+    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name" value="[#first_name#]">
+  </div>
+  <div class="form-group">
+    <label for="last_name">Last Name</label>
+    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name" value="[#last_name#]">
+  </div>
+  <div class="form-group">
+    <label for="player_position">Position</label>
+    <textarea class="form-control" id="player_position" name="player_position">[#player_position#]</textarea>
+  </div>
+  <input type="hidden" name="submit" value="save">
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
