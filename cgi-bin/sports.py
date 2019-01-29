@@ -1,4 +1,4 @@
-import appconfig, cgi, mysql.connector, controllers
+import appconfig, cgi, mysql.connector, controllers, sportslib
 
 """
 Main application class that opens MySQL connection and execute
@@ -43,6 +43,8 @@ class Application:
       If dictionary contains key "location" then its value treated as HTML redirect.
     """
     def start(self):
+        if self.action.startswith('admin_') and self.action != 'admin_login' and not sportslib.get_logged_in_user_id():
+            return {'location': sportslib.Link('admin_login').url()}
         result = {'error': ''}
         try:
             self.database_connection = mysql.connector.connect(
