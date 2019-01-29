@@ -1,14 +1,4 @@
-import appconfig, cgi, mysql.connector
-
-# User actions
-import action_about
-import action_home
-
-# Admin
-import action_admin_login
-import action_admin_logout
-import action_admin_sports
-import action_admin_sport_edit
+import appconfig, cgi, mysql.connector, controllers
 
 """
 Main application class that opens MySQL connection and execute
@@ -26,13 +16,13 @@ class Application:
         # Build a map of actions that application knows about.
         self.actions = {
             # User actions
-            'home': action_home.Action(),
-            'about': action_about.Action(),
+            'home': controllers.Home(),
+            'about': controllers.About(),
             # Admin
-            'admin_login': action_admin_login.Action(),
-            'admin_logout': action_admin_logout.Action(),
-            'admin_sports': action_admin_sports.Action(),
-            'admin_sport_edit': action_admin_sport_edit.Action()
+            'admin_login': controllers.AdminLogin(),
+            'admin_logout': controllers.AdminLogout(),
+            'admin_sports': controllers.AdminSports(),
+            'admin_sport_edit': controllers.AdminSportEdit()
         }
         if action not in self.actions.keys():
             raise ValueError('Action ' + action + ' is not implemented.')

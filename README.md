@@ -26,12 +26,12 @@ Scripts **index.py** act as main code point in [Front Controller Pattern](https:
 
 HTTP parameter **action** sets the desired web application page name for rendering.
 
-## Actions
-**index.py** holds a dictionary of all supported **Web Actions** (i.e. controllers) inside **sports.py** in **Application** class. 
+## Controllers
+**index.py** holds a dictionary of all supported **Web Controllers** inside **sports.py** in **Application** class. All controllers are located in **controllers.py**
 
-Each action class is defined in its own file and loaded as a module. Action must have **execute** method and return a dictionary of parameters to be rendered in action's HTML template.
+Controller must have **execute** method and return a dictionary of parameters to be rendered in controllers's HTML template.
 
-For example, this is the code of logout action in **action_admin_logout.py** where returned dictionary contains a set of cookies to set (here we have authentication cookie **auth** reset, see more info below) and redirection URL in **location** value to Login page (**admin_login** action):
+For example, this is the code of logout controller in **controllers.py** **AdminLogout** class where returned dictionary contains a set of cookies to set (here we have authentication cookie **auth** reset, see more info below) and redirection URL in **location** value to Login page (**admin_login** action):
 ```Python
     def execute(self, database_connection, arguments, cookies):
         return {
@@ -42,8 +42,19 @@ For example, this is the code of logout action in **action_admin_logout.py** whe
         }
 ```
 
-## Index action (root)
+## Index controller (root)
 When the user opens web application with default HTTP URL [http://127.0.0.1:8000](http://127.0.0.1:8000), the Python's web server loads static HTML file **index.html** which contains HTML redirect to web application's Front Controller in **/cgi-bin/index.py** to application's Home page.
+
+## Templates
+
+All \*.html files are considered templates and may contain one or more variables.
+For example, the following HTML snippet contains *GREETING* variable and application replaces template variable with value (HTML escaped!) if controller returns
+a value for the variable in dictionary like: `{'GREETING': 'Hello world!'}` 
+```HTML
+
+<p class="123">[#GREETING#]</p>
+
+```
 
 Below you may find the list of links that web application processes.
 
