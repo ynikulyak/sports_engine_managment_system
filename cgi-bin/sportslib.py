@@ -89,8 +89,8 @@ def build_template(template_contents, parameters):
             template_variable = '[#' + key + '#]'
             result = result.replace(template_variable, value)
     result = result.replace(base_path_placeholder, app_base_path)
-    #if user_id:
-    logout_button = Link('admin_logout', '', 'Log out', 'pull-right btn')
+    if user_id:
+        logout_button = Link('admin_logout', '', 'Log out', 'pull-right btn')
     result = result.replace(log_out_button_placeholder, str(logout_button))
     return result
 
@@ -118,6 +118,7 @@ def build_auth_cookie(user_id):
     user_id = str(user_id)
     return hashlib.sha1((appconfig.secret + user_id).encode('utf-8')).hexdigest() + '--' + user_id
 
+# Call this method before outputting Content-Type: text/html; charset=utf-8
 def get_cookies():
     result = {}
     if 'HTTP_COOKIE' in os.environ:
@@ -128,6 +129,7 @@ def get_cookies():
                 result[url_decode(cookie[0])] = url_decode(cookie[1])
     return result
 
+# Call this method before outputting Content-Type: text/html; charset=utf-8
 def set_cookies(cookies):
     for key in cookies.keys():
         value = cookies[key]
@@ -143,10 +145,7 @@ def redirect(location):
     location (string) - location to redirect to.
     """
     redirect_template = file_get_contents(redirect_template_path)
-    location = {
-        'LOCATION': location
-    }
-    return build_template(redirect_template, location)
+    return build_template(redirect_template, {'LOCATION': location})
 
 
 def file_get_contents(filename):

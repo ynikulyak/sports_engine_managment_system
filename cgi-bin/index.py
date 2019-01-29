@@ -10,6 +10,7 @@ arguments = cgi.FieldStorage()
 # Filnames for header and footer
 header_filename = "_header.html"
 footer_filename = "_footer.html"
+admin_menu_filename = "admin/_admin_menu.html"
 
 # Determine the action and body file to open from the index directory
 action = sportslib.sanitize_file_name(arguments.getvalue("action", "home"))
@@ -39,6 +40,10 @@ else:
 	# Send HTML header 
 	header_template = sportslib.file_get_contents('./' + header_filename)
 	print(sportslib.build_template(header_template, application_result))
+
+	if sportslib.get_logged_in_user_id():
+	   admin_menu_template = sportslib.file_get_contents('./' + admin_menu_filename)
+	   print(sportslib.build_template(admin_menu_template, application_result))
 
 	# Send HTML body
 	body_file_template = sportslib.file_get_contents('./' + action_file)
