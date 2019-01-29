@@ -216,6 +216,90 @@ class AdminSportEdit:
         data['location'] = sportslib.Link('admin_sports').url()
         return data
 
+class AdminTeams:
+
+    sql = "SELECT * FROM team ORDER BY team_id"
+
+    """
+    Admin team controller
+
+    Parameters:
+    database_connection (mysql.connector.connection) - MySQL database connection
+    arguments (cgi.arguments - HTML form fields and GET arguments
+    cookies (dict) - cookies as a dictionary
+    Returns:
+    dictionary (dict) of contents variable to render
+    """
+    def execute(self, database_connection, arguments, cookies):
+        cursor = database_connection.cursor()
+        cursor.execute(self.sql)
+        table = sportslib.HTMLTable("ID", "Team Name", "Sport_ID", "Division_ID")
+        row = cursor.fetchone()
+        while row is not None:
+            link = sportslib.Link("admin_team_edit", row[0], str(row[0]))
+            edit_link = sportslib.Link("admin_team_edit", row[0], "edit")
+            table.add_row(link, row[1], row[2], row[3], edit_link, 'X')
+            row = cursor.fetchone()
+
+        return {'TABLE_OF_TEAMS': table}
+
+
+class AdminTeamEdit:
+
+    select_sql = "SELECT * FROM team WHERE team_id = %s LIMIT 1"
+    insert_sql = "INSERT INTO team (team_name, sport_id, division-id) VALUES (%s, %s, %s)"
+    update_sql = "UPDATE team SET team_name = %s, sport_id = %s, division_id = %s WHERE team_id = %s LIMIT 1"
+
+
+    """
+    Admin add/edit team controller
+
+    Parameters:
+    database_connection (mysql.connector.connection) - MySQL database connection
+    arguments (cgi.arguments - HTML form fields and GET arguments
+    cookies (dict) - cookies as a dictionary
+    """
+    def execute(self, database_connection, arguments, cookies):
+        team_id = arguments.getvalue("id", "")
+        data = {
+            'id': team_id, 
+            'team_name': arguments.getvalue("team_name", "").strip(),
+            'sport_id': arguments.getvalue("sport_id", "").strip(),
+	    'division_id': arguments.getvalue("division_id", "").strip(),
+            'action_title': 'Add',
+            'error': ''
+        }
+        if "save" == arguments.getvalue("submit", ""):
+            return self.save(database_connection, arguments, cookies, data)
+        row = None
+        if team_id:
+            cursor = database_connection.cursor()
+            cursor.execute(self.select_sql, (team_id,))
+            row = cursor.fetchone()
+            if not row:
+                data['error'] = 'Team ' + team_id + ' not found.'
+                data['id'] = ''
+                return data
+            data['id'] = row[0]
+            data['team_name'] = row[1]
+            data['sport_id'] = row[2] 
+            data['division_id'] = row[3] 
+            data['action_title'] = 'Edit'
+        return data
+
+    def save(self, database_connection, arguments, cookies, data):
+        if data['id'] == '' or data['team_name'] == '' or data['sport_id'] == '' or data['division_id'] == '':
+            data['error'] = 'All fields are required'
+            return data
+        cursor = database_connection.cursor()
+        if data['id'] == '':
+            cursor.execute(self.insert_sql, (data['team_name'], data['sport_id'], data['division_id']))
+        else:
+            cursor.execute(self.update_sql, (data['team_name'], data['sport_id'], data['division_id'], data['id']))
+        database_connection.commit()
+        data['location'] = sportslib.Link('admin_teams').url()
+        return data
+
 
 
 

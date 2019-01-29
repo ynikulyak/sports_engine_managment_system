@@ -26,8 +26,11 @@ class Application:
             'admin_division_edit': controllers.AdminDivisionEdit(),
             'admin_sports': controllers.AdminSports(),
             'admin_sport_edit': controllers.AdminSportEdit(),
+            'admin_teams': controllers.AdminTeams(),
+            'admin_team_edit': controllers.AdminTeamEdit(),
             'admin_players': controllers.AdminPlayers(),
             'admin_player_edit': controllers.AdminPlayerEdit()
+
         }
         if action not in self.actions.keys():
             raise ValueError('Action ' + action + ' is not implemented.')

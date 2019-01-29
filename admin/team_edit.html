@@ -1,0 +1,19 @@
+<h2>[#action_title#] team [#id#]</h2>
+
+<div class="has-error">[#error#]</div>
+<form role="form" method="post" action="[#BASE_PATH#]action=admin_team_edit&id=[#id#]">
+  <div class="form-group">
+    <label for="team_name">Team Name</label>
+    <input type="text" class="form-control" id="team_name" name="team_name" placeholder="Enter Team Name" value="[#team_name#]">
+  </div>
+  <div class="form-group">
+    <label for="sport_id">Sport ID</label>
+    <input type="text" class="form-control" id="sport_id" name="sport_id" placeholder="Enter sport ID" value="[#sport_id#]">
+  </div>
+  <div class="form-group">
+    <label for="division_id">Division ID</label>
+    <textarea class="form-control" id="division_id" name="division_id">[#division_id#]</textarea>
+  </div>
+  <input type="hidden" name="submit" value="save">
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
