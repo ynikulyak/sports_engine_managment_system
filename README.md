@@ -27,9 +27,9 @@ Scripts **index.py** act as main code point in [Front Controller Pattern](https:
 HTTP parameter **action** sets the desired web application page name for rendering.
 
 ## Controllers
-**index.py** holds a dictionary of all supported **Web Controllers** inside **sports.py** in **Application** class. All controllers are located in **controllers.py**
+**index.py** creates a new applicaiton object that holds a dictionary of all supported **Web Controllers** inside **sports.py** in **Application** class. All controller classes are located in **controllers.py**
 
-Controller must have **execute** method and return a dictionary of parameters to be rendered in controllers's HTML template.
+Each controller must have **execute** method and return a dictionary of parameters to be rendered in controllers's HTML template.
 
 For example, this is the code of logout controller in **controllers.py** **AdminLogout** class where returned dictionary contains a set of cookies to set (here we have authentication cookie **auth** reset, see more info below) and redirection URL in **location** value to Login page (**admin_login** action):
 ```Python
@@ -41,6 +41,8 @@ For example, this is the code of logout controller in **controllers.py** **Admin
           'location': sportslib.Link('admin_login').url()
         }
 ```
+
+**cookies** and **location** keys in controller's result are the only keys that get special treatment in **index.py**. 
 
 ## Index controller (root)
 When the user opens web application with default HTTP URL [http://127.0.0.1:8000](http://127.0.0.1:8000), the Python's web server loads static HTML file **index.html** which contains HTML redirect to web application's Front Controller in **/cgi-bin/index.py** to application's Home page.
