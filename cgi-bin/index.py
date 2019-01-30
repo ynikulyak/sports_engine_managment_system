@@ -41,7 +41,7 @@ else:
 	header_template = sportslib.file_get_contents('./' + header_filename)
 	print(sportslib.build_template(header_template, application_result))
 
-	if sportslib.get_logged_in_user_id():
+	if sportslib.get_logged_in_user_id() and action.startswith("admin_"):
 	   admin_menu_template = sportslib.file_get_contents('./' + admin_menu_filename)
 	   print(sportslib.build_template(admin_menu_template, application_result))
 
