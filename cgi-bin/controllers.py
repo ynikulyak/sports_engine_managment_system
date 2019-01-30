@@ -233,7 +233,7 @@ class AdminTeams:
     def execute(self, database_connection, arguments, cookies):
         cursor = database_connection.cursor()
         cursor.execute(self.sql)
-        table = sportslib.HTMLTable("ID", "Team Name", "Sport_ID", "Division_ID")
+        table = sportslib.HTMLTable("ID", "Team Name", "Sport_ID", "Division_ID", "Edit", "Delete")
         row = cursor.fetchone()
         while row is not None:
             link = sportslib.Link("admin_team_edit", row[0], str(row[0]))
