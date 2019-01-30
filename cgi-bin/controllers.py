@@ -1,4 +1,4 @@
-import sportslib, hashlib, uuid 
+import sportslib, hashlib
 
 # Regular user controllers
 
@@ -13,7 +13,6 @@ class About:
     cookies (dict) - cookies as a dictionary
     """
     def execute(self, database_connection, arguments, cookies):
-        # TODO: read database here
         return {}
 
 class Home:
@@ -27,8 +26,8 @@ class Home:
     cookies (dict) - cookies as a dictionary
     """
     def execute(self, database_connection, arguments, cookies):
-        # TODO: read database here
-        return {}
+        # search.py is responsible for searching on site
+        return {'TABLE_OF_SPORT_DATA': '', 'error': '', 'QUERY': ''}
 
 import sportslib
 
@@ -406,10 +405,7 @@ class AdminLogin:
     cookies (dict) - cookies as a dictionary
     """
     def execute(self, database_connection, arguments, cookies):
-        data = {
-          'random_id': uuid.uuid1(), 
-          'error': ''
-        }
+        data = {'error': ''}
         login = arguments.getvalue("username", "").strip()
         password = hashlib.sha1(arguments.getvalue("password", "").encode('utf-8')).hexdigest()
         submit = arguments.getvalue("submit", "").strip()

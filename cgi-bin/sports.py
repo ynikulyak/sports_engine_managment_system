@@ -30,7 +30,6 @@ class Application:
             'admin_team_edit': controllers.AdminTeamEdit(),
             'admin_players': controllers.AdminPlayers(),
             'admin_player_edit': controllers.AdminPlayerEdit()
-
         }
         if action not in self.actions.keys():
             raise ValueError('Action ' + action + ' is not implemented.')
@@ -58,15 +57,12 @@ class Application:
                 password=appconfig.database_password,
                 database=appconfig.database_name,
                 host=appconfig.database_host)
-            if not self.database_connection:
-                result['error'] = 'No MySQL connection'
-            else: 
-                result = self.actionInstance.execute(
+            result = self.actionInstance.execute(
                     self.database_connection, 
                     self.arguments, 
                     self.cookies)
-                if 'error' not in result.keys():
-                    result['error'] = ''
+            if 'error' not in result.keys():
+                result['error'] = ''
         except mysql.connector.Error as err:
             result['error'] = str(err)
         finally:

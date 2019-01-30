@@ -70,6 +70,15 @@ Below you may find the list of links that web application processes.
 * [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_sports**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_sports) - List of Sports
 * [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_sport_edit**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_sport_edit) - Add new Sports
 * [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_sport_edit&id=1**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_sport_edit&&id=1) - Edit Sport 1
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_divisions**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_divisions) - List of Divisions
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_division_edit**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_division_edit) - Add new Division
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_division_edit&id=1000**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_division_edit&id=1000) - Edit Division 1000
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_teams**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_teams) - List of Teams
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_team_edit**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_team_edit)  - Add new Team
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_team_edit&id=10**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_team_edit&id=10) - Edit Team 10
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_players**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_players) - List of Players
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_player_edit**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_player_edit)  - Add new Player
+* [http://127.0.0.1:8000/cgi-bin/index.py?**action=admin_player_edit&id=100**](http://127.0.0.1:8000/cgi-bin/index.py?action=admin_player_edit&id=100) - Edit Player 100
 
 **Note:** all actions that have predix **admin_** take their templates from **admin/** folder.
 

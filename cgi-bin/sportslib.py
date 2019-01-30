@@ -114,7 +114,7 @@ def build_template(template_contents, parameters):
                 value = encode_html_entities(value)
             else:
                 value = str(value)
-            template_variable = '[#' + key + '#]'
+            template_variable = '[#' + key + '#]' 
             result = result.replace(template_variable, value)
     result = result.replace(base_path_placeholder, app_base_path)
     if user_id:
@@ -134,8 +134,10 @@ def get_logged_in_user_id():
         if len(data) < 2:
             return None
         signature = hashlib.sha1((appconfig.secret + data[1]).encode('utf-8')).hexdigest()
+        # Only allow user if SHA1 signature matches
         if signature == data[0]:
             return data[1]
+    # No cookie or wrong signature
     return None
 
 def build_auth_cookie(user_id):
@@ -210,17 +212,6 @@ def encode_html_entities(text):
     text (string) - text with encoded html entities
     """
     return html.escape(text)
-
-def decode_html_entities(text):
-    """
-    Decodes HTML entities back to regular characters
-
-    Parameters:
-    text (string) - text to work with
-    Returns:
-    text (string) - text with decoded html entities
-    """
-    return html.unescape(text)
 
 def url_encode(value):
     """
