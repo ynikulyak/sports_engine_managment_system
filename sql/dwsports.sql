@@ -20,7 +20,7 @@ CREATE TABLE player (
         player_name varchar(50) NOT NULL,
         player_position varchar(20),
         
-        CONSTRAINT player primary key (team_id, division_id, sport_id),
+        -- CONSTRAINT player primary key (team_id, division_id, sport_id),
         
         CONSTRAINT team_fk FOREIGN KEY(team_id)
         REFERENCES team(team_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -36,11 +36,11 @@ INSERT INTO dwsports.team SELECT team_id, team_name FROM sports.team;
 INSERT INTO dwsports.division SELECT division_id, division_name FROM sports.division;
 INSERT INTO dwsports.sports SELECT sport_id, sport_name, sport_description FROM sports.sports;
 INSERT INTO dwsports.player 
-	-- (team_id, division_id, sport_id, player_id, player_name, player_position)
-    (SELECT a.team_id, b.division_id, c.sport_id, d.player_id,
+	 (team_id, division_id, sport_id, player_id, player_name, player_position)
+    SELECT a.team_id, b.division_id, c.sport_id, d.player_id,
     concat( trim(d.player_first_name), ' ', trim(d.player_last_name)),
     d.player_position
 	FROM sports.team a, sports.division b, sports.sports c, sports.player d, sports.team_members e
-    WHERE a.division_id = b.division_id AND a.sport_id = e.team_id  AND e.player_id = d.player_id AND a.sport_id = c.sport_id);
+    WHERE a.division_id = b.division_id AND a.team_id = e.team_id  AND e.player_id = d.player_id AND a.sport_id = c.sport_id;
 
 
