@@ -26,25 +26,30 @@ WHERE p.sport_id = s.sport_id
 GROUP BY s.sport_id, s.sport_name;
 
 -- 4
--- To count how many divisions each sport has, execute:
--- Currently has no relation
-SELECT s.sport_id, s.sport_name, COUNT(d.division_id) AS number_of_divisions
-FROM division d, sports s
-WHERE d.sport_id = s.sport_id
+-- To count how many Right fielders each sport has, execute:
+SELECT s.sport_id, s.sport_name, COUNT(p.player_position) AS number_of_right_fielders
+FROM player p, sports s
+WHERE p.sport_id = s.sport_id AND p.player_position="Right fielder"
 GROUP BY s.sport_id, s.sport_name;
 
 -- 5
--- To count how many teams each division has, execute:
--- Currently has no relation
-SELECT d.division_id, d.division_name, COUNT(t.team_id) AS number_of_teams
-FROM division d, team t
-WHERE t.division_id = d.division_id
-GROUP BY d.division_id, d.division_name;
+-- To count how many Pitchers each team has, execute:
+SELECT t.team_id, t.team_name, COUNT(p.player_position) AS number_of_pitchers
+FROM player p, team t
+WHERE p.team_id = t.team_id AND p.player_position="Pitcher"
+GROUP BY t.team_id, t.team_name;
 
 -- 6
--- To count how many teams each sport has, execute:
--- Currently has no relation
-SELECT s.sport_id, s.sport_name, COUNT(t.team_id) AS number_of_teams
-FROM team t, sports s
-WHERE t.sport_id = s.sport_id
-GROUP BY s.sport_id, s.sport_name;
+-- To count how many Forward each team has, execute:
+SELECT t.team_id, t.team_name, COUNT(p.player_position) AS number_of_forwards
+FROM player p, team t
+WHERE p.team_id = t.team_id AND p.player_position="Forward"
+GROUP BY t.team_id, t.team_name;
+
+-- 7
+-- To count how many Goalies each division has, execute:
+SELECT d.division_id, d.division_name, COUNT(p.player_position) AS number_of_goalies
+FROM player p, division d
+WHERE p.division_id = d.division_id AND p.player_position="Goalkeeper"
+GROUP BY d.division_id, d.division_name;
+
