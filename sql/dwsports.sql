@@ -19,9 +19,7 @@ CREATE TABLE player (
         player_id INT NOT NULL,
         player_name varchar(50) NOT NULL,
         player_position varchar(20),
-        
-        -- CONSTRAINT player primary key (team_id, division_id, sport_id),
-        
+                
         CONSTRAINT team_fk FOREIGN KEY(team_id)
         REFERENCES team(team_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         
