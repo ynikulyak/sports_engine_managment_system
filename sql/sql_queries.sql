@@ -38,6 +38,10 @@ GROUP BY t.team_id, t.team_name;
 -- OR simply use View:
 SELECT * FROM TEAM_PLAYERS_COUNT;
 
+-- Find players only in specified team using view
+SELECT * FROM TEAM_PLAYERS_COUNT
+WHERE team_name = "Los Angelos Dodgers";
+
 -- 2
 -- To see how many players there are per division, execute:
 SELECT d.division_id, d.division_name, COUNT(p.player_id) AS number_of_players
@@ -47,6 +51,10 @@ GROUP BY d.division_id, d.division_name;
 
 -- OR simply use View:
 SELECT * FROM DIVISION_PLAYERS_COUNT;
+
+-- Find the number of players in the specified division
+SELECT * FROM division_players_count
+WHERE division_name = "Major League Baseball";
 
 -- 3
 -- To see how many players there are per sport,execute:
